@@ -80,6 +80,7 @@ function ExtLibrary:createPopup(player, text, dismissable, background, foregroun
 	txt.TextWrapped = true; txt.TextScaled = true;
 	txt.Text = text; txt.Font = "SourceSansBold";
 	txt.Parent = fr; txt.Visible = true;
+	self:echo("Popup successfully created for "..player.Name..".");
 	function Popup:addButton(btntext, callback,  color)
 		color = color or Color3.new(51/255,51/255,102/255);
 		callback = callback or (function (p) end); btntext = btntext or "Button";
@@ -89,6 +90,7 @@ function ExtLibrary:createPopup(player, text, dismissable, background, foregroun
 		btn.TextStrokeTransparency = 0; btn.Parent = fr;
 		btn.MouseButton1Down:connect(function () callback(player) end);
 		table.insert(self.buttons,btn);
+		self:echo("Button '"..btntxt.."' added.");
 	end
 	function Popup:display()
 		local btns = #self.buttons;
@@ -100,6 +102,7 @@ function ExtLibrary:createPopup(player, text, dismissable, background, foregroun
 			self.buttons[i].Visible = true;
 		end;
 		fr.Visible = true;
+		self:echo("Popup for "..player.Name.." set to display.");
 	end
 	return pop;
 end
