@@ -69,7 +69,7 @@ function ExtLibrary:createPopup(player, background, foreground, dismissable)
 		ex.TextColor3 = Color3.new(1,1,1); ex.TextStrokeTransparency = 0;
 		ex.Text = "X"; ex.BorderColor3 = Color3.new(0,0,0);
 		ex.Parent = fr; ex.ZIndex = 6;
-		ex.MouseButton1Down:connect(function () pui:Destory(); end);
+		ex.MouseButton1Down:connect(function () pui:remove(); end);
 	end;
 	function Popup:addButton(text, callback,  color)
 		color = color or Color3.new(51/255,51/255,102/255);
