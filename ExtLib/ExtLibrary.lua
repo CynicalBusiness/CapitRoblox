@@ -48,8 +48,8 @@ function ExtLibrary:round(num, mult)
 end
 
 -- GUI --------
-function ExtLibrary:createPopup(player, background, foreground, dismissable)
-	if not player then return end;
+function ExtLibrary:createPopup(player, text, dismissable, background, foreground)
+	if not player and text then return end;
 	background = background or Color3.new(51/255,51/255,51/255);
 	foreground = foreground or Color3.new(1,1,1);
 	dismissable = dismissble or true;
@@ -71,12 +71,18 @@ function ExtLibrary:createPopup(player, background, foreground, dismissable)
 		ex.Parent = fr; ex.ZIndex = 6;
 		ex.MouseButton1Down:connect(function () pui:remove(); end);
 	end;
-	function Popup:addButton(text, callback,  color)
+	local txt = Instance.new("TextLabel"); txt.ZIndex = 6;
+	txt.BackgroundTransparency = 1; txt.TextColor3 = foreground;
+	txt.TextStrokeTransparency = 0; txt.Size = UDim2.new(1,0,1,-35);
+	txt.TextWrapped = true; txt.TextScaled = true;
+	txt.Text = text; txt.Font = "SourceSansBold";
+	txt.Parent = fr; txt.Visible = true;
+	function Popup:addButton(btntext, callback,  color)
 		color = color or Color3.new(51/255,51/255,102/255);
-		callback = callback or (function (p) end); text = text or "OK";
+		callback = callback or (function (p) end); btntext = btntext or "Button";
 		local btn = Instance.new("TextButton"); btn.ZIndex = 6;
 		btn.BackgroundColor3 = color; btn.TextColor3 = Color3.new(1,1,1);
-		btn.Text = text; btn.BorderColor3 = Color3.new(0,0,0);
+		btn.Text = btntext; btn.BorderColor3 = Color3.new(0,0,0);
 		btn.TextStrokeTransparency = 0; btn.Parent = fr;
 		btn.MouseButton1Down:connect(function () callback(player) end);
 		table.insert(self.buttons,btn);
