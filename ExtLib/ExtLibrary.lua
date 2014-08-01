@@ -6,10 +6,11 @@
 
 -- Function and Extension documentation is available on the GitHub repository.
 
+print("ExtLibrary loaded.");
 ExtLibrary = {}; ExtLibrary.__index = ExtLibrary;
 function ExtLibrary.new()
 	lib = {}; setmetatable(lib, ExtLibrary);
-	lib.exts = {}; lib.global = {};
+	lib.exts = {};
 	return lib;
 end
 
@@ -31,7 +32,7 @@ function ExtLibrary:formatTime(sec)
 	return hr..":"..mn..":"..se;
 end
 function ExtLibrary:echo(msg, level)
-	level = level or "info"; lever:lower();
+	level = level or "info"; level:lower();
 	local levels = {info="INFO", warning="WARN", 
 		severe="SEVERE", fatal="FATAL", debug="DEBUG"};
 	if not levels[level] then
@@ -109,7 +110,7 @@ end
 
 -- EXTENSIONS --------
 function ExtLibrary:registerExtension(ext)
-	if not (ext and name) then return end;
+	if not ext then return end;
 	if (ext:IsA("ModuleScript")) then
 		self.exts[ext.Name]=ext;
 		self:echo("Successfully hooked extension '"..ext.Name.."'.");
@@ -122,7 +123,7 @@ function ExtLibrary:getExtension(name)
 		return require(self.exts[name]);
 	else
 		self:echo("Extension '"..name.."' is missing or invalid.");
-		return nil;
+		return (function () end);
 	end
 end
 
@@ -147,5 +148,5 @@ function ExtLibrary:getGlobal()
 end
 
 -- WRAPUP --------
-self:echo("ExtLibrary loaded and ready.");
+print("ExtLibrary loaded and ready.");
 return ExtLibrary.new();
