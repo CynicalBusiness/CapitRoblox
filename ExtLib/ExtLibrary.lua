@@ -15,6 +15,7 @@ end
 
 -- STRINGS --------
 function ExtLibrary:split(str, split_char)
+	split_char = split_char or " ";
 	str:gsub(split_char, " ");
 	local arr = {};
 	for v in string.gmatch(str, "%S+") do
