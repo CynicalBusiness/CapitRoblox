@@ -6,10 +6,10 @@
 
 -- Function and Extension documentation is available on the GitHub repository.
 
-print("ExtLibrary loaded.");
 ExtLibrary = {}; ExtLibrary.__index = ExtLibrary;
 function ExtLibrary.new()
 	lib = {}; setmetatable(lib, ExtLibrary);
+	lib.exts = {}; lib.global = {};
 	return lib;
 end
 
@@ -107,4 +107,45 @@ function ExtLibrary:createPopup(player, text, dismissable, background, foregroun
 	return pop;
 end
 
+-- EXTENSIONS --------
+function ExtLibrary:registerExtension(ext)
+	if not (ext and name) then return end;
+	if (ext:IsA("ModuleScript")) then
+		self.exts[ext.Name]=ext;
+		self:echo("Successfully hooked extension '"..ext.Name.."'.");
+	else
+		self:echo("Failed to hook extension: '"..ext.Name.."' is not a valid extension.");
+	end
+end
+function ExtLibrary:getExtension(name)
+	if (self.exts[name] and self.exts[name]:IsA("ModuleScript")) then
+		return require(self.exts[name]);
+	else
+		self:echo("Extension '"..name.."' is missing or invalid.");
+		return nil;
+	end
+end
+
+-- GLOBAL TABLE --------
+function ExtLibrary:putGlobal(key, value)
+	self.global[key]=value;
+	return value;
+end
+function ExtLibrary:getGlobal(key)
+	return self.global[key];
+end
+function ExtLibrary:unsetGlobal(key)
+	local val = self.global[key];
+	self:putGlobal(key,nil);
+	return val;
+end
+function ExtLibrary:clearGlobal()
+	self.global = {};
+end
+function ExtLibrary:getGlobal()
+	return self.global;
+end
+
+-- WRAPUP --------
+self:echo("ExtLibrary loaded and ready.");
 return ExtLibrary.new();
