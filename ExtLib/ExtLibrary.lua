@@ -14,9 +14,7 @@ function ExtLibrary.new()
 end
 
 -- STRINGS --------
-function ExtLibrary:split(str, split_char)
-	split_char = split_char or " ";
-	str:gsub(split_char, " ");
+function ExtLibrary:split(str)
 	local arr = {};
 	for v in string.gmatch(str, "%S+") do
 		table.insert(arr, v);
