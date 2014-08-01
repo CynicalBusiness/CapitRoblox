@@ -23,9 +23,11 @@ function ExtLibrary:split(str)
 end
 function ExtLibrary:formatTime(sec)
 	sec = sec or os.time();
+	repeat sec=sec-86400 until sec<=86400;
 	local hr = string.format("%02.f", math.floor(sec/3600));
 	local mn = string.format("%02.f", math.floor((sec/60)-(hr*60)));
 	local se = string.format("%02.f", math.floor(sec-(hr*3600)-(mn*60)));
+	hr=hr-7; if hr<0 then hr=hr+24 end;
 	return hr..":"..mn..":"..se;
 end
 function ExtLibrary:echo(msg, level)
@@ -38,7 +40,8 @@ function ExtLibrary:echo(msg, level)
 		level = "info";
 	end
 	local curtime = self:formatTime();
-	return "["..curtime.."] "..levels[level]..": "..msg;
+	tag = "["..curtime.."] "..levels[level]..": "..msg;
+	print(tag); return tag;
 end
 
 -- MATH --------
