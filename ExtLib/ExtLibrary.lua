@@ -8,7 +8,7 @@
 
 print("ExtLibrary loaded.");
 ExtLibrary = {}; ExtLibrary.__index = ExtLibrary;
-return function ExtLibrary.new()
+function ExtLibrary.new()
 	lib = {}; setmetatable(lib, ExtLibrary);
 	return lib;
 end
@@ -39,7 +39,7 @@ function ExtLibrary:echo(msg, level)
 		level = "info";
 	end
 	local curtime = self:formatTime();
-	return tag = "["..curtime.."] "..levels[level]..": "..msg;
+	return "["..curtime.."] "..levels[level]..": "..msg;
 end
 
 -- MATH --------
@@ -50,7 +50,7 @@ end
 
 -- GUI --------
 function ExtLibrary:createPopup(player, background, foreground, dismissable)
-	if not player return end;
+	if not player then return end;
 	background = background or Color3.new(51/255,51/255,51/255);
 	foreground = foreground or Color3.new(1,1,1);
 	dismissable = dismissble or true;
@@ -80,18 +80,20 @@ function ExtLibrary:createPopup(player, background, foreground, dismissable)
 		btn.Text = text; btn.BorderColor3 = Color3.new(0,0,0);
 		btn.TextStrokeTransparency = 0; btn.Parent = fr;
 		btn.MouseButton1Down:connect(function () callback(player) end);
-		table.insert(self:buttons,btn);
+		table.insert(self.buttons,btn);
 	end
 	function Popup:display()
-		local btns = #self:buttons;
+		local btns = #self.buttons;
 		local sizeX = 1/btns;
 		for i=1,btns do
 			local posX = sizeX*(i-1);
-			self:buttons[i].Size = UDim2.new(sizeX,-10,0,25);
-			self:buttons[i].Position = UDim2.new(posX,5,1,-30);
-			self:buttons[i].Visible = true;
+			self.buttons[i].Size = UDim2.new(sizeX,-10,0,25);
+			self.buttons[i].Position = UDim2.new(posX,5,1,-30);
+			self.buttons[i].Visible = true;
 		end;
 		fr.Visible = true;
 	end
 	return pop;
 end
+
+return ExtLibrary.new();
