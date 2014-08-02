@@ -117,6 +117,9 @@ function ExtLibrary:createPopup(player, text, dismissable, background, foregroun
 	txt.Text = text; txt.Font = "SourceSansBold";
 	txt.Parent = fr; txt.Visible = true;
 	self:echo("Popup successfully created for "..player.Name..".");
+	function Popup:hide()
+		pui:remove();
+	end
 	function Popup:addButton(btntext, callback,  color)
 		color = color or Color3.new(51/255,51/255,102/255);
 		callback = callback or (function (p) end); btntext = btntext or "Button";
