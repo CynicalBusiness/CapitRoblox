@@ -66,7 +66,7 @@ function ExtLibrary:strcolContains(collection, str)
 	end
 	return false;
 end
-function ExtLibrary:strcolNum(collection);
+function ExtLibrary:strcolNum(collection)
 	return table.getn(self:split(collection));
 end
 
