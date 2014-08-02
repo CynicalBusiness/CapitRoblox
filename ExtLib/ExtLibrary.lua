@@ -10,7 +10,7 @@ print("ExtLibrary loaded.");
 ExtLibrary = {}; ExtLibrary.__index = ExtLibrary;
 function ExtLibrary.new()
 	lib = {}; setmetatable(lib, ExtLibrary);
-	lib.exts = {};
+	lib.exts = {}; self.global = {};
 	return lib;
 end
 
@@ -43,6 +43,19 @@ function ExtLibrary:echo(msg, level)
 	local curtime = self:formatTime();
 	tag = "["..curtime.."] "..levels[level]..": "..msg;
 	print(tag); return tag;
+end
+function ExtLibrary:strcolAdd(collection, str)
+	return collection.." "..str;
+end
+function ExtLibrary:strcolSub(collection, str)
+	local arr = self:split(str);
+	local removed = "";
+	for i=1,#arr do
+		if arr[i]==str then
+			removed = table.remove(arr, i);
+		end
+	end
+	return table.concat(arr, " "), removed;
 end
 
 -- MATH --------
