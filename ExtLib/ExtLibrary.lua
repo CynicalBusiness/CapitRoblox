@@ -70,6 +70,16 @@ function ExtLibrary:strcolNum(collection)
 	return table.getn(self:split(collection));
 end
 
+-- TABLES --------
+function ExtLibrary:tableContains(table, value)
+	for _,v in pairs(table) do
+		if tostring(v) == tostring(value) then
+			return true;
+		end
+	end
+	return false;
+end
+
 -- MATH --------
 function ExtLibrary:round(num, mult)
 	mult = mult or 1;
