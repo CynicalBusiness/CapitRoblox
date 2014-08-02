@@ -57,6 +57,18 @@ function ExtLibrary:strcolSub(collection, str)
 	end
 	return table.concat(arr, " "), removed;
 end
+function ExtLibrary:strcolContains(collection, str)
+	local arr = self:split(str);
+	for i=1,#arr do
+		if arr[i]==str then
+			return true;
+		end
+	end
+	return false;
+end
+function ExtLibrary:strcolNum(collection);
+	return table.getn(self:split(collection));
+end
 
 -- MATH --------
 function ExtLibrary:round(num, mult)
