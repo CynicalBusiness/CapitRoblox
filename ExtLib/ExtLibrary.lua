@@ -71,8 +71,8 @@ function ExtLibrary:strcolNum(collection)
 end
 
 -- TABLES --------
-function ExtLibrary:tableContains(table, value)
-	for _,v in pairs(table) do
+function ExtLibrary:tableContains(tbl, value)
+	for _,v in pairs(tbl) do
 		if tostring(v) == tostring(value) then
 			return true;
 		end
