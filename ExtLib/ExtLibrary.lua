@@ -10,7 +10,7 @@ print("ExtLibrary loaded.");
 ExtLibrary = {}; ExtLibrary.__index = ExtLibrary;
 function ExtLibrary.new()
 	lib = {}; setmetatable(lib, ExtLibrary);
-	lib.exts = {}; self.global = {};
+	lib.exts = {}; lib.global = {};
 	return lib;
 end
 
