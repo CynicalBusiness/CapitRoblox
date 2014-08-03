@@ -77,11 +77,117 @@ end
 -- TABLES --------
 function ExtLibrary:tableContains(tbl, value)
 	for _,v in pairs(tbl) do
-		if tostring(v) == tostring(value) then
+		if v == value then
 			return true;
 		end
 	end
 	return false;
+end
+
+function ExtLibrary:getIndexOf(tbl, value)
+	for i=1,#tbl do
+		if tbl[i]==value then
+			return i;
+		end
+	end
+	return 0;
+end
+
+-- SETS --------
+function ExtLibrary:createMap()
+	if not classtype then return end;
+	lib = self;
+	Map = {};
+	Map.__index = Map;
+	set = {}; setmetatable(set, Map);
+	set.keys = {}; set.values = {}; set.size=0; 
+	set.keyclass = keyclass; self.valclass = valclass;
+	function Map:put(k,v)
+		local index = lib:getIndexOf(self.keys, k);
+		if (index==0) then
+			table.insert(self.keys, k);
+			table.insert(self.values, v);
+		else
+			table.insert(self.values, index);
+		end
+		self.size = self.size+1;
+	end
+	function Map:delete(k)
+		local index = lib:getIndexOf(self.keys, k);
+		if (index>0) then
+			table.remove(self.keys, index);
+			table.remove(self.values, index);
+			self.size = self.size-1;
+		end
+	end
+	function Map:getKeys()
+		return self.keys;
+	end
+	function Map:getValues()
+		return self.values;
+	end
+	function Map:size()
+		return self.size();
+	end
+	function Map:getAll()
+		local i = 0;
+		return function ()
+				i=i+1;
+				if i<self.size then return self.keys[i], self.values[i] end;
+			end
+	end
+	function Map:getAt(index)
+		return self.values[index];
+	end
+	function Map:getKeyAt(index)
+		return self.keys[index];
+	end
+	function Map:containsKey(k)
+		return lib:tableContains(self.keys, k);
+	end
+	function Map:containsValue(v)
+		return lib:tableContains(self.values, v);
+	end
+	function Map:get(k)
+		local index = lib:getIndexOf(self.keys, k);
+		if (index~=0) then
+			return self.values[index];
+		else
+			return nil;	
+		end
+	end
+	function Map:addFrom(map)
+		for k,v in self:getAll() do
+			self:put(k,v);
+		end
+	end
+	function Map:equals(map)
+		if (self:size()==map:size()) then
+			for i=1,self:size() do
+				if (self:getKeyAt(i)~=map:getKeyAt(i)) or (self:getAt(i)~=map:getAt(i)) then
+					return false;
+				end
+			end
+			return true;
+		end
+		return false;
+	end
+	function Map:__tostring()
+		local parts = {};
+		for k,v in self:getAll() do
+			table.insert(parts, tostring(k).."="..tostring(v));
+		end
+		return "Map<"..self.keyclass..","..self.valclass..":"..self.size..">{"..table.concat(parts, ", ").."}";
+	end
+	
+	-- STATIC
+	function Map.__add(map1, map2)
+		return map1:addFrom(map2);
+	end
+	function Map.__eq(map1, map2)
+		return map1:equals(map2);	
+	end
+	return set;
 end
 
 -- MATH --------
