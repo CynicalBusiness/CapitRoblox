@@ -93,24 +93,25 @@ function ExtLibrary:getIndexOf(tbl, value)
 	return 0;
 end
 
--- SETS --------
+-- MAPS --------
 function ExtLibrary:createMap()
-	if not classtype then return end;
 	lib = self;
 	Map = {};
 	Map.__index = Map;
 	set = {}; setmetatable(set, Map);
 	set.keys = {}; set.values = {}; set.size=0; 
-	set.keyclass = keyclass; self.valclass = valclass;
+	set.keyclass = "Mixed"; set.valclass = "Mixed";
 	function Map:put(k,v)
 		local index = lib:getIndexOf(self.keys, k);
 		if (index==0) then
 			table.insert(self.keys, k);
 			table.insert(self.values, v);
+			self.size = self.size+1;
 		else
-			table.insert(self.values, index);
+			table.insert(self.values, index, v);
+			table.remove(self.values, index+1);
 		end
-		self.size = self.size+1;
+		return self;
 	end
 	function Map:delete(k)
 		local index = lib:getIndexOf(self.keys, k);
@@ -119,6 +120,7 @@ function ExtLibrary:createMap()
 			table.remove(self.values, index);
 			self.size = self.size-1;
 		end
+		return self;
 	end
 	function Map:getKeys()
 		return self.keys;
@@ -133,7 +135,7 @@ function ExtLibrary:createMap()
 		local i = 0;
 		return function ()
 				i=i+1;
-				if i<self.size then return self.keys[i], self.values[i] end;
+				if i<=self.size then return self.keys[i], self.values[i] end;
 			end
 	end
 	function Map:getAt(index)
@@ -157,9 +159,10 @@ function ExtLibrary:createMap()
 		end
 	end
 	function Map:addFrom(map)
-		for k,v in self:getAll() do
+		for k,v in map:getAll() do
 			self:put(k,v);
 		end
+		return self;
 	end
 	function Map:equals(map)
 		if (self:size()==map:size()) then
@@ -179,7 +182,7 @@ function ExtLibrary:createMap()
 		end
 		return "Map<"..self.keyclass..","..self.valclass..":"..self.size..">{"..table.concat(parts, ", ").."}";
 	end
-	
+
 	-- STATIC
 	function Map.__add(map1, map2)
 		return map1:addFrom(map2);
