@@ -48,7 +48,7 @@ function ExtLibrary:strcolAdd(collection, str)
 	return collection.." "..str;
 end
 function ExtLibrary:strcolSub(collection, str)
-	local arr = self:split(str);
+	local arr = self:split(collection);
 	local removed = "";
 	for i=1,#arr do
 		if arr[i]==str then
@@ -58,7 +58,7 @@ function ExtLibrary:strcolSub(collection, str)
 	return table.concat(arr, " "), removed;
 end
 function ExtLibrary:strcolContains(collection, str)
-	local arr = self:split(str);
+	local arr = self:split(collection);
 	for i=1,#arr do
 		if arr[i]==str then
 			return true;
