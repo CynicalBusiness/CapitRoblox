@@ -45,7 +45,11 @@ function ExtLibrary:echo(msg, level)
 	print(tag); return tag;
 end
 function ExtLibrary:strcolAdd(collection, str)
-	return collection.." "..str;
+	if (collection~="") then
+		return collection.." "..str;
+	else
+		return str;
+	end
 end
 function ExtLibrary:strcolSub(collection, str)
 	local arr = self:split(collection);
