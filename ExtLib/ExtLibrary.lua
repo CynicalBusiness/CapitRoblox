@@ -6,7 +6,7 @@
 
 -- Function and Extension documentation is available on the GitHub repository.
 
-print("ExtLibrary loaded.");
+-- INIT --------
 ExtLibrary = {}; ExtLibrary.__index = ExtLibrary;
 function ExtLibrary.new()
 	lib = {}; setmetatable(lib, ExtLibrary);
@@ -184,5 +184,7 @@ function ExtLibrary:getGlobal()
 end
 
 -- WRAPUP --------
-print("ExtLibrary loaded and ready.");
-return ExtLibrary.new();
+local library = ExtLibrary.new();
+require(script.Preloads)(library);
+library:echo("ExtLibrary successfully loaded.");
+return library;
