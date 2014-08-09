@@ -14,6 +14,62 @@ function ExtLibrary.new()
 	return lib;
 end
 
+-- CLASSES --------
+function ExtLibrary:getObjectClass()
+	Object = {}; Object.__index = Object;
+	obj = {}; setmetatable(obj, Object);
+	function Object._construct(class)
+		obj._instanceTime=math.floor(tick());
+		obj._name="Object";
+		function Object.__tostring()
+			return "class>"..obj._name;
+		end
+	end
+	return obj;
+end
+
+function ExtLibrary:class(name, constructor, parent)
+	constructor = constructor or (function() end);
+	if not (parent and type(parent)=='table' and parent._construct) then parent=self:getObjectClass(); end;
+	local c = {};
+	if (type(parent)=='table') then
+		for k,v in pairs(parent) do
+			c[k]=v;
+		end
+		c._parent = parent;
+	end
+	if name then c._name = tostring(name); end;
+	function c.__tostring()
+		return tostring(parent)..">"..c._name;
+	end
+	c.__index = c;
+	
+	local mt = {};
+	mt.__call = function (class_tbl, ...)
+		local obj = {};
+		setmetatable(obj,c);
+		parent._construct(obj, ...);
+		if constructor then constructor(obj, ...); end;
+		
+		return obj;
+	end
+	c._construct = constructor;
+	c.is_a = function (self, klass)
+		local m = getmetatable(self)
+		while m do
+			wait();
+			if m._name==klass then return true end;
+			m=m._parent;
+		end
+		return false;
+	end
+	function c:IsA(type)
+		return c.is_a(self, type);
+	end
+	setmetatable(c,mt);
+	return c;
+end
+
 -- STRINGS --------
 function ExtLibrary:split(str)
 	local arr = {};
@@ -298,6 +354,7 @@ end
 
 -- WRAPUP --------
 local library = ExtLibrary.new();
-require(script.Preloads)(library);
+local res, err = pcall(function () require(script.Preloads)(library) end);
+if not res then library:echo("An error was experienced during loading of extensions: "..err); end;
 library:echo("ExtLibrary successfully loaded.");
 return library;
